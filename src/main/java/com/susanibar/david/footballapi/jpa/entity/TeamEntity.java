@@ -3,11 +3,13 @@ package com.susanibar.david.footballapi.jpa.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "team")
 public class TeamEntity {
@@ -24,6 +26,13 @@ public class TeamEntity {
     @JoinColumn(name = "competitionId")
     private CompetitionEntity competition;
 
+    @OneToMany(
+            mappedBy = "team",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<PlayerEntity> players = new HashSet<PlayerEntity>();
+
     public TeamEntity(String id, String name, String tla, String shortName, String areaName, String email) {
         this.id = id;
         this.name = name;
@@ -31,5 +40,15 @@ public class TeamEntity {
         this.shortName = shortName;
         this.areaName = areaName;
         this.email = email;
+    }
+
+    public void addPlayer(PlayerEntity playerEntity){
+        playerEntity.setTeam(this);
+        players.add(playerEntity);
+    }
+
+    public void removePlayer(PlayerEntity playerEntity){
+        playerEntity.setTeam(null);
+        players.remove(playerEntity);
     }
 }

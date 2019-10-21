@@ -1,6 +1,7 @@
 package com.susanibar.david.footballapi.helpers;
 
 import com.susanibar.david.footballapi.network.ApiServiceProvider;
+import com.susanibar.david.footballapi.network.pojo.Team;
 import com.susanibar.david.footballapi.network.pojo.TeamByCompetition;
 import com.susanibar.david.footballapi.network.service.ApiFootballData;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ public class ApiFootballHelperImpl implements ApiFootballHelper {
 
     @Override
     public TeamByCompetition obtainTeamByCompetition(String leagueCode) {
+        TeamByCompetition teamByCompetition = new TeamByCompetition();
         ApiFootballData apiFootballData = ApiServiceProvider.endpointToCall(ApiFootballData.class, xAuthToken);
 
         Call<TeamByCompetition> teamByCompetitionCall = apiFootballData.obtainTeamByCompetition(leagueCode);
@@ -26,7 +28,7 @@ public class ApiFootballHelperImpl implements ApiFootballHelper {
             Response<TeamByCompetition> teamByCompetitionResponse = teamByCompetitionCall.execute();
 
             if (teamByCompetitionResponse.isSuccessful()){
-                return teamByCompetitionResponse.body();
+                teamByCompetition = teamByCompetitionResponse.body();
             } else {
                 //call exception
             }
@@ -34,6 +36,28 @@ public class ApiFootballHelperImpl implements ApiFootballHelper {
             e.printStackTrace();
         }
 
-        return null;
+        return teamByCompetition;
+    }
+
+    @Override
+    public Team obtainTeamById(String idLocal) {
+        Team team = new Team();
+        ApiFootballData apiFootballData = ApiServiceProvider.endpointToCall(ApiFootballData.class, xAuthToken);
+
+        Call<Team> teamCall = apiFootballData.obtainTeamById(idLocal);
+
+        try {
+            Response<Team> teamResponse = teamCall.execute();
+
+            if (teamResponse.isSuccessful()){
+                team = teamResponse.body();
+            } else {
+                //call exception
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return team;
     }
 }

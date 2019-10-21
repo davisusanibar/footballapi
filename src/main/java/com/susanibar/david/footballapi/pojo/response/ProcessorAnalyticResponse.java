@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProcessorResponse {
-    private String message;
+public class ProcessorAnalyticResponse {
+    private int total;
 }

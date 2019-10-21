@@ -2,6 +2,8 @@ package com.susanibar.david.footballapi.network.pojo;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class Team {
     private String id;
@@ -10,4 +12,5 @@ public class Team {
     private String shortName;
     private Area area;
     private String email;
+    private List<Squad> squad;
 }

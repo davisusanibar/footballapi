@@ -1,9 +1,13 @@
 package com.susanibar.david.footballapi.network;
 
+import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import java.util.concurrent.TimeUnit;
 
 public class ApiServiceProvider {
     private static final String BASE_URL = "https://api.football-data.org/v2/";
@@ -14,12 +18,20 @@ public class ApiServiceProvider {
                     .addConverterFactory(GsonConverterFactory.create());
 
     private static OkHttpClient.Builder okHttpClientBuilder =
-            new OkHttpClient.Builder();
+            new OkHttpClient.Builder().readTimeout(15, TimeUnit.SECONDS)
+                    .connectTimeout(15, TimeUnit.SECONDS)
+                    .writeTimeout(25, TimeUnit.SECONDS);;
 
-    private static Retrofit retrofit = retrofitBuilder.build();
+    private static HttpLoggingInterceptor logging = new HttpLoggingInterceptor()
+            .setLevel(HttpLoggingInterceptor.Level.BASIC);
 
     public static <S> S endpointToCall(Class<S> servicio, String xAuthToken){
         //header to handle authorization
+        ConnectionPool pool = new ConnectionPool(5, 1, TimeUnit.SECONDS);
+        okHttpClientBuilder.connectionPool(pool);
+
+        okHttpClientBuilder.addInterceptor(logging);
+
         okHttpClientBuilder.addInterceptor(
                 chain -> {
                     Request initialRequest = chain.request();
@@ -34,8 +46,7 @@ public class ApiServiceProvider {
         );
 
         retrofitBuilder.client(okHttpClientBuilder.build());
-        retrofit = retrofitBuilder.build();
 
-        return retrofit.create(servicio);
+        return retrofitBuilder.build().create(servicio);
     }
 }
