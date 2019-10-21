@@ -1,5 +1,6 @@
 package com.susanibar.david.footballapi.services;
 
+import com.susanibar.david.footballapi.exception.ProcessorException;
 import com.susanibar.david.footballapi.helpers.ApiFootballHelper;
 import com.susanibar.david.footballapi.jpa.entity.CompetitionEntity;
 import com.susanibar.david.footballapi.jpa.entity.PlayerEntity;
@@ -9,6 +10,7 @@ import com.susanibar.david.footballapi.network.pojo.Squad;
 import com.susanibar.david.footballapi.network.pojo.Team;
 import com.susanibar.david.footballapi.network.pojo.TeamByCompetition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,15 +26,27 @@ public class ProcessorServiceImpl implements ProcessorService {
 
 
     @Override
-    public void processorImportLeague(String leagueCode) {
-        TeamByCompetition teamByCompetition =
-                apiFootballHelper.obtainTeamByCompetition(leagueCode);
+    public void processorImportLeague(String leagueCode) throws ProcessorException {
+        try {
+            TeamByCompetition teamByCompetition =
+                    apiFootballHelper.obtainTeamByCompetition(leagueCode);
 
-        competitionDAO.save(
-                getCompetitionEntity(
-                        teamByCompetition
-                )
-        );
+
+            int leagueCodeImported = competitionDAO.validateIfLeagueWasImported(leagueCode);
+            if (leagueCodeImported > 0){
+                throw new ProcessorException("League already imported", HttpStatus.CONFLICT);
+            }
+
+            competitionDAO.save(
+                    getCompetitionEntity(
+                            teamByCompetition
+                    )
+            );
+        } catch (ProcessorException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ProcessorException(e, "Server error", HttpStatus.GATEWAY_TIMEOUT);
+        }
     }
 
     @Override
