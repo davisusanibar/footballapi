@@ -11,10 +11,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "team")
+@Table(name = "TEAM")
 public class TeamEntity {
     @Id
-    private String id;
+    private Integer id;
     private String name;
     private String tla;
     private String shortName;
@@ -33,7 +33,7 @@ public class TeamEntity {
     )
     private Set<PlayerEntity> players = new HashSet<PlayerEntity>();
 
-    public TeamEntity(String id, String name, String tla, String shortName, String areaName, String email) {
+    public TeamEntity(Integer id, String name, String tla, String shortName, String areaName, String email) {
         this.id = id;
         this.name = name;
         this.tla = tla;

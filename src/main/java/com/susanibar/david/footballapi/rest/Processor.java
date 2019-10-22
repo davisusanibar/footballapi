@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Processor {
 
     @Autowired
-    ProcessorService processorService;
+    private ProcessorService processorService;
 
     @GetMapping("/import-league/{leagueCode}")
     @ResponseStatus(HttpStatus.CREATED)

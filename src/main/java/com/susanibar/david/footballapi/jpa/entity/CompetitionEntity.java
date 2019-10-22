@@ -11,10 +11,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "competition")
+@Table(name = "COMPETITION")
 public class CompetitionEntity {
     @Id
-    private String id;
+    private Integer id;
     private String name;
     private String code;
     private String areaName;
@@ -35,7 +35,7 @@ public class CompetitionEntity {
         teams.remove(teamEntity);
     }
 
-    public CompetitionEntity(String id, String name, String code, String areaName) {
+    public CompetitionEntity(Integer id, String name, String code, String areaName) {
         this.id = id;
         this.name = name;
         this.code = code;

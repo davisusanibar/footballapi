@@ -9,10 +9,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "player")
+@Table(name = "PLAYER")
 public class PlayerEntity {
     @Id
-    private String id;
+    private Integer id;
     private String name;
     private String position;
     private String dateOfBirth;
@@ -26,7 +26,7 @@ public class PlayerEntity {
     )
     private TeamEntity team;
 
-    public PlayerEntity(String id, String name, String position, String dateOfBirth, String countryOfBirth, String nationality) {
+    public PlayerEntity(Integer id, String name, String position, String dateOfBirth, String countryOfBirth, String nationality) {
         this.id = id;
         this.name = name;
         this.position = position;

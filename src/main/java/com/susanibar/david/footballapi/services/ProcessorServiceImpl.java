@@ -19,10 +19,10 @@ import java.util.List;
 public class ProcessorServiceImpl implements ProcessorService {
 
     @Autowired
-    ApiFootballHelper apiFootballHelper;
+    private ApiFootballHelper apiFootballHelper;
 
     @Autowired
-    CompetitionDAO competitionDAO;
+    private CompetitionDAO competitionDAO;
 
 
     @Override
@@ -76,7 +76,7 @@ public class ProcessorServiceImpl implements ProcessorService {
     private CompetitionEntity getCompetitionEntity(TeamByCompetition teamByCompetition, int localRoundTripeQuantity) {
         // Competition
         CompetitionEntity competitionEntity = new CompetitionEntity(
-                teamByCompetition.getCompetition().getId(),
+                Integer.parseInt(teamByCompetition.getCompetition().getId()),
                 teamByCompetition.getCompetition().getName(),
                 teamByCompetition.getCompetition().getCode(),
                 teamByCompetition.getCompetition().getArea().getName()
@@ -87,7 +87,7 @@ public class ProcessorServiceImpl implements ProcessorService {
         int contador = 0;
         for (Team team : listTeam) {
             TeamEntity teamEntity = new TeamEntity(
-                    team.getId(),
+                    Integer.parseInt(team.getId()),
                     team.getName(),
                     team.getTla(),
                     team.getShortName(),
@@ -110,7 +110,7 @@ public class ProcessorServiceImpl implements ProcessorService {
                         if (squad.getRole().equalsIgnoreCase("PLAYER")) {
                             teamEntity.addPlayer(
                                     new PlayerEntity(
-                                            squad.getId(),
+                                            Integer.parseInt(squad.getId()),
                                             squad.getName(),
                                             squad.getPosition(),
                                             squad.getDateOfBirth(),
@@ -139,7 +139,7 @@ public class ProcessorServiceImpl implements ProcessorService {
     private CompetitionEntity getCompetitionEntity(TeamByCompetition teamByCompetition) {
         // Competition
         CompetitionEntity competitionEntity = new CompetitionEntity(
-                teamByCompetition.getCompetition().getId(),
+                Integer.parseInt(teamByCompetition.getCompetition().getId()),
                 teamByCompetition.getCompetition().getName(),
                 teamByCompetition.getCompetition().getCode(),
                 teamByCompetition.getCompetition().getArea().getName()
@@ -149,7 +149,7 @@ public class ProcessorServiceImpl implements ProcessorService {
         List<Team> listTeam = teamByCompetition.getTeams();
         for (Team team : listTeam) {
             TeamEntity teamEntity = new TeamEntity(
-                    team.getId(),
+                    Integer.parseInt(team.getId()),
                     team.getName(),
                     team.getTla(),
                     team.getShortName(),
@@ -171,7 +171,7 @@ public class ProcessorServiceImpl implements ProcessorService {
                     if (squad.getRole().equalsIgnoreCase("PLAYER")) {
                         teamEntity.addPlayer(
                                 new PlayerEntity(
-                                        squad.getId(),
+                                        Integer.parseInt(squad.getId()),
                                         squad.getName(),
                                         squad.getPosition(),
                                         squad.getDateOfBirth(),
