@@ -7,4 +7,5 @@ import com.susanibar.david.footballapi.network.pojo.TeamByCompetition;
 public interface ApiFootballHelper {
     TeamByCompetition obtainTeamByCompetition(String leagueCode) throws ProcessorException;
     Team obtainTeamById(String idLocal);
+
 }

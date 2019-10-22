@@ -20,7 +20,9 @@ public class Processor {
 
     @GetMapping("/import-league/{leagueCode}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity importLeague(@PathVariable(name="leagueCode") String localLeagueCode) throws ProcessorException {
+    public ResponseEntity importLeague(
+            @PathVariable(name="leagueCode") String localLeagueCode
+    ) throws ProcessorException {
 
         processorService.processorImportLeague(localLeagueCode);
 
@@ -30,8 +32,25 @@ public class Processor {
         );
     }
 
+    @GetMapping("/import-league/{leagueCode}/{roundTripeQuantity}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity importLeague(
+            @PathVariable(name="leagueCode") String localLeagueCode,
+            @PathVariable(name="roundTripeQuantity") int localRoundTripeQuantity
+    ) throws ProcessorException {
+
+        processorService.processorImportLeague(localLeagueCode, localRoundTripeQuantity);
+
+        return new ResponseEntity(
+                new ProcessorImportResponse("Successfully imported"),
+                HttpStatus.CREATED
+        );
+    }
+
     @GetMapping("/total-players/{leagueCode}")
-    public ProcessorAnalyticResponse totalPlayersByLeague(@PathVariable(name="leagueCode") String localLeagueCode){
+    public ProcessorAnalyticResponse totalPlayersByLeague(
+            @PathVariable(name="leagueCode") String localLeagueCode
+    ){
         int totalPlayersByLeague = processorService.processorTotalPlayersByLeague(localLeagueCode);
 
         return new ProcessorAnalyticResponse(totalPlayersByLeague);

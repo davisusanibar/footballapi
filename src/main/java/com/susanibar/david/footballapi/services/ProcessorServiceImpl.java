@@ -50,11 +50,91 @@ public class ProcessorServiceImpl implements ProcessorService {
     }
 
     @Override
+    public void processorImportLeague(String leagueCode, int localRoundTripeQuantity) {
+        try {
+            TeamByCompetition teamByCompetition =
+                    apiFootballHelper.obtainTeamByCompetition(leagueCode);
+
+
+            int leagueCodeImported = competitionDAO.validateIfLeagueWasImported(leagueCode);
+            if (leagueCodeImported > 0){
+                throw new ProcessorException("League already imported", HttpStatus.CONFLICT);
+            }
+
+            competitionDAO.save(
+                    getCompetitionEntity(
+                            teamByCompetition, localRoundTripeQuantity
+                    )
+            );
+        } catch (ProcessorException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ProcessorException(e, "Server error", HttpStatus.GATEWAY_TIMEOUT);
+        }
+    }
+
+    private CompetitionEntity getCompetitionEntity(TeamByCompetition teamByCompetition, int localRoundTripeQuantity) {
+        // Competition
+        CompetitionEntity competitionEntity = new CompetitionEntity(
+                teamByCompetition.getCompetition().getId(),
+                teamByCompetition.getCompetition().getName(),
+                teamByCompetition.getCompetition().getCode(),
+                teamByCompetition.getCompetition().getArea().getName()
+        );
+
+        // Teams
+        List<Team> listTeam = teamByCompetition.getTeams();
+        int contador = 0;
+        for (Team team : listTeam) {
+            TeamEntity teamEntity = new TeamEntity(
+                    team.getId(),
+                    team.getName(),
+                    team.getTla(),
+                    team.getShortName(),
+                    team.getArea().getName(),
+                    team.getEmail()
+            );
+
+            competitionEntity.addTeam(
+                    teamEntity
+            );
+
+            // Players
+            Team teamAndSquad;
+            try {
+                if (contador < localRoundTripeQuantity) {
+                    teamAndSquad = apiFootballHelper.obtainTeamById(team.getId());
+
+
+                    for (Squad squad : teamAndSquad.getSquad()) {
+                        if (squad.getRole().equalsIgnoreCase("PLAYER")) {
+                            teamEntity.addPlayer(
+                                    new PlayerEntity(
+                                            squad.getId(),
+                                            squad.getName(),
+                                            squad.getPosition(),
+                                            squad.getDateOfBirth(),
+                                            squad.getCountryOfBirth(),
+                                            squad.getNationality()
+                                    )
+                            );
+                        }
+                    }
+                    contador++;
+                }
+            } catch (Exception e) {
+                System.out.println("teamByCompetition = [" + teamByCompetition + "]");
+            }
+        }
+
+        return competitionEntity;
+    }
+
+    @Override
     public int processorTotalPlayersByLeague(String leagueCode) {
 
         return competitionDAO.totalPlayersByLeague(leagueCode);
     }
-
 
     private CompetitionEntity getCompetitionEntity(TeamByCompetition teamByCompetition) {
         // Competition
