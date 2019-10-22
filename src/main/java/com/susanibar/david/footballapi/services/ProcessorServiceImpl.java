@@ -67,7 +67,6 @@ public class ProcessorServiceImpl implements ProcessorService {
 
         // Teams
         List<Team> listTeam = teamByCompetition.getTeams();
-        int contador = 0;
         for (Team team : listTeam) {
             TeamEntity teamEntity = new TeamEntity(
                     team.getId(),
@@ -85,25 +84,22 @@ public class ProcessorServiceImpl implements ProcessorService {
             // Players
             Team teamAndSquad;
             try {
-                if (contador < 4) {
-                    teamAndSquad = apiFootballHelper.obtainTeamById(team.getId());
+                teamAndSquad = apiFootballHelper.obtainTeamById(team.getId());
 
 
-                    for (Squad squad : teamAndSquad.getSquad()) {
-                        if (squad.getRole().equalsIgnoreCase("PLAYER")) {
-                            teamEntity.addPlayer(
-                                    new PlayerEntity(
-                                            squad.getId(),
-                                            squad.getName(),
-                                            squad.getPosition(),
-                                            squad.getDateOfBirth(),
-                                            squad.getCountryOfBirth(),
-                                            squad.getNationality()
-                                    )
-                            );
-                        }
+                for (Squad squad : teamAndSquad.getSquad()) {
+                    if (squad.getRole().equalsIgnoreCase("PLAYER")) {
+                        teamEntity.addPlayer(
+                                new PlayerEntity(
+                                        squad.getId(),
+                                        squad.getName(),
+                                        squad.getPosition(),
+                                        squad.getDateOfBirth(),
+                                        squad.getCountryOfBirth(),
+                                        squad.getNationality()
+                                )
+                        );
                     }
-                    contador++;
                 }
             } catch (Exception e) {
                 System.out.println("teamByCompetition = [" + teamByCompetition + "]");
