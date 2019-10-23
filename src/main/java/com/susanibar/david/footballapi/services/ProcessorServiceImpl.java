@@ -26,7 +26,7 @@ public class ProcessorServiceImpl implements ProcessorService {
 
 
     @Override
-    public void processorImportLeague(String leagueCode) throws ProcessorException {
+    public CompetitionEntity processorImportLeague(String leagueCode) throws ProcessorException {
         try {
             TeamByCompetition teamByCompetition =
                     apiFootballHelper.obtainTeamByCompetition(leagueCode);
@@ -37,7 +37,7 @@ public class ProcessorServiceImpl implements ProcessorService {
                 throw new ProcessorException("League already imported", HttpStatus.CONFLICT);
             }
 
-            competitionDAO.save(
+            return competitionDAO.save(
                     getCompetitionEntity(
                             teamByCompetition
                     )
@@ -136,7 +136,7 @@ public class ProcessorServiceImpl implements ProcessorService {
         return competitionDAO.totalPlayersByLeague(leagueCode);
     }
 
-    private CompetitionEntity getCompetitionEntity(TeamByCompetition teamByCompetition) {
+    public CompetitionEntity getCompetitionEntity(TeamByCompetition teamByCompetition) {
         // Competition
         CompetitionEntity competitionEntity = new CompetitionEntity(
                 Integer.parseInt(teamByCompetition.getCompetition().getId()),

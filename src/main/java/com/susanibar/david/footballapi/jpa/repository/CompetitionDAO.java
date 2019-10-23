@@ -15,9 +15,6 @@ public interface CompetitionDAO extends JpaRepository<CompetitionEntity, Integer
     )
     int validateIfLeagueWasImported(@Param("leagueCode") String leagueCode);
 
-    @Override
-    CompetitionEntity save(CompetitionEntity competitionEntity);
-
     @Query(
             "SELECT COUNT(c) FROM CompetitionEntity c " +
                 "RIGHT JOIN TeamEntity t " +

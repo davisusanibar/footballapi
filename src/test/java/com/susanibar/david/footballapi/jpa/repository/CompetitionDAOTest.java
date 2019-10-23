@@ -3,6 +3,7 @@ package com.susanibar.david.footballapi.jpa.repository;
 import com.susanibar.david.footballapi.jpa.entity.CompetitionEntity;
 import com.susanibar.david.footballapi.jpa.entity.PlayerEntity;
 import com.susanibar.david.footballapi.jpa.entity.TeamEntity;
+import org.hibernate.collection.internal.PersistentSet;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,21 +23,9 @@ import java.util.Optional;
 public class CompetitionDAOTest {
     @Autowired
     private CompetitionDAO competitionDAO;
-
     private CompetitionEntity competitionEntity;
     private TeamEntity teamEntity;
     private PlayerEntity playerEntity;
-
-    @Test
-    public void validateIfLeagueWasImported() {
-        competitionDAO.save(competitionEntity);
-
-        Optional<CompetitionEntity> localCompetitionEntity = competitionDAO.findById(1);
-
-        int quantity = competitionDAO.validateIfLeagueWasImported("CL");
-
-        Assert.assertEquals(1, quantity);
-    }
 
     @Before
     public void init(){
@@ -50,6 +39,32 @@ public class CompetitionDAOTest {
     }
 
     @Test
+    public void validateIfLeagueWasImported() {
+        competitionDAO.save(competitionEntity);
+
+        Optional<CompetitionEntity> localCompetitionEntity = competitionDAO.findById(1);
+
+        int quantity = competitionDAO.validateIfLeagueWasImported("CL");
+
+        Assert.assertEquals(1, quantity);
+    }
+
+    @Test
+    public void totalPlayersByLeague() {
+        competitionDAO.save(competitionEntity);
+
+        Optional<CompetitionEntity> localCompetitionEntity = competitionDAO.findById(1);
+
+        Assert.assertEquals(
+                1,
+                ((TeamEntity) (
+                        (PersistentSet)(localCompetitionEntity.get()).getTeams())
+                        .toArray()[0]
+                ).getPlayers().size()
+        );
+    }
+
+    @Test
     public void save() {
         competitionDAO.save(competitionEntity);
 
@@ -58,7 +73,4 @@ public class CompetitionDAOTest {
         Assert.assertEquals(localCompetitionEntity.get().getName(), competitionEntity.getName());
     }
 
-    @Test
-    public void totalPlayersByLeague() {
-    }
 }
