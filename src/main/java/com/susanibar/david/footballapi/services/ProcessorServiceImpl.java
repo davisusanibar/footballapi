@@ -136,7 +136,7 @@ public class ProcessorServiceImpl implements ProcessorService {
         return competitionDAO.totalPlayersByLeague(leagueCode);
     }
 
-    public CompetitionEntity getCompetitionEntity(TeamByCompetition teamByCompetition) {
+    private CompetitionEntity getCompetitionEntity(TeamByCompetition teamByCompetition) {
         // Competition
         CompetitionEntity competitionEntity = new CompetitionEntity(
                 Integer.parseInt(teamByCompetition.getCompetition().getId()),
