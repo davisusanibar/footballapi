@@ -130,6 +130,7 @@ public class ProcessorServiceImpl implements ProcessorService {
         return competitionEntity;
     }
 
+    // FIXME: Handle exception
     @Override
     public int processorTotalPlayersByLeague(String leagueCode) {
 

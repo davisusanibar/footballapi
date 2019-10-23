@@ -20,6 +20,7 @@ public class Processor {
 
     @GetMapping("/import-league/{leagueCode}")
     @ResponseStatus(HttpStatus.CREATED)
+    // FIXME: This process take lots of time, try to convert to asynchronous process (JMS / RabbitMQ)
     public ResponseEntity importLeague(
             @PathVariable(name="leagueCode") String localLeagueCode
     ) throws ProcessorException {

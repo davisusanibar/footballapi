@@ -10,6 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "PLAYER")
+// FIXME: Add auditing columns
 public class PlayerEntity {
     @Id
     private Integer id;

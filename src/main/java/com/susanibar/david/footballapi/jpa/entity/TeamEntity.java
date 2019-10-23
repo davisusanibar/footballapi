@@ -12,6 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "TEAM")
+// FIXME: Add auditing columns
 public class TeamEntity {
     @Id
     private Integer id;
